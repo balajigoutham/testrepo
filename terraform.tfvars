@@ -1,2 +1,2 @@
-environment = "prod"
+environment = "test"
 project     = "devops4solutions"
