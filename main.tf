@@ -3,7 +3,7 @@ terraform {
   required_version = ">= 0.13.0"
    backend "s3" {
     bucket = "cloudquickpocsbackendtf"
-    key = "quickcloudpocsbackend.tfstate"
+    key = "quickcloudpocsbackendtfstate"
     region = "us-east-1"
    }
  }
