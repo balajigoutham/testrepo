@@ -1,48 +1,19 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-      Version = "~>3.27"
-    }
+# terraform apply -var-file="app.tfvars" -var="createdBy=e2esa"
+
+locals {
+  tags = {
+    Project     = var.project
+    CreatedBy   = var.createdBy
+    CreatedOn   = timestamp()
+    Environment = terraform.workspace
   }
-
-  required_version = ">=0.14.9" 
-
-   backend "s3" {
-       bucket = "[terrabucket1]"
-       key    = "[arn:aws:kms:ap-south-1:593587691751:alias/aws/s3]"
-       region = "ap-south-1"
-   }
 }
 
-}
-
-provider "aws" {
-  version = "~>3.0"
-  region  = "ap-south-1"
-}
-resource "aws_s3_bucket" "s3Bucket" {
-     bucket = "[terrabucket1]"
-     acl       = "public-read"
-
-     policy  = <<EOF
-{
-     "id" : "MakePublic",
-   "version" : "2012-10-17",
-   "statement" : [
-      {
-         "action" : [
-             "s3:GetObject"
-          ],
-         "effect" : "Allow",
-         "resource" : "arn:aws:s3:::[terrabucket1]/*",
-         "principal" : "*"
-      }
-    ]
-  }
-EOF
-
-   website {
-       index_document = "index.html"
-   }
+module "ec2" {
+  #source            = "../../modules/e2esa-module-aws-ec2"
+  source = "git::https://github.com/e2eSolutionArchitect/terraform.git//providers/aws/modules/e2esa-module-aws-ec2?ref=main"
+  #for_each          = toset(var.ec2_names) # toset(["ec21","ec22"])
+  ami               = var.ami
+  availability_zone = var.availability_zone
+  tags              = local.tags
 }
