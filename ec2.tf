@@ -1,8 +1,4 @@
-provider "aws" {
-  access_key = "AKIAYUNEVMDTYL2M5LGG"
-  secret_key = "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"
-  region     = "us-east-1"
-}
+
 
 ## Create VPC ##
 resource "aws_vpc" "terraform-vpc" {
